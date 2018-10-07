@@ -77,17 +77,14 @@ end
 Q = Q_new;
 
 % calculate the initial states
-%x = fsolve(@(x) x-x*Q, randn(1,n.S));
-%phi = x;
-phi = zeros(1,n.S)+1/n.S;
+x = fsolve(@(x) x-x*Q, randn(1,n.S));
+phi = x;
+%phi = zeros(1,n.S)+1/n.S;
 
 % calculate the likelihood
 L = zeros(n.I,1);
 
-for i = 1:40:n.I
-    if flag(i) == 1
-        continue
-    end
+for i = 1:n.I
     totalT = n.T(i);
     tmp = phi;
     tmpD = cell2mat(D(i));

@@ -35,12 +35,10 @@ options = optimoptions(@fminunc,'Display','iter','Algorithm','quasi-newton','Tol
 N = n.E+1+n.XVal*n.E+(n.E-1)*n.E;
 b0 = randn(N,1);
 
-while crit > 0.01
-    Q_old = Q;
-    
-    [b,FVAL,EXITFLAG,OUTPUT,GRAD,hess] = fminunc('estLik',b0,options);
+while crit > 0.0001
     b0 = b;
-    crit = max(abs(Q(:)-Q_old(:)))
+    [b,FVAL,EXITFLAG,OUTPUT,GRAD,hess] = fminunc('estLik',b0,options);
+    crit = max(abs(b(:)-b0(:)))
 end
 
 
