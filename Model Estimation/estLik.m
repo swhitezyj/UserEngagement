@@ -22,6 +22,9 @@ est.lambda2.delta = b(n.E+1+1:n.E+1+n.XVal*n.E);
 est.lambda2.delta = reshape(est.lambda2.delta,n.XVal,n.E);
 est.lambda2.h = b(n.E+1+n.XVal*n.E+1:n.E+1+n.XVal*n.E+(n.E-1)*n.E);
 est.lambda2.h = reshape(est.lambda2.h,n.E-1,n.E);
+
+n.SNum = 96;
+
 for i = 2:1:n.E-1
     est.lambda2.h(i,:) = est.lambda2.h(i-1,:) + est.lambda2.h(i,:).^2;
 end
@@ -76,23 +79,19 @@ end
 
 Q = Q_new;
 
-% calculate the initial states
-x = fsolve(@(x) x-x*Q, randn(1,n.S));
-phi = x;
-%phi = zeros(1,n.S)+1/n.S;
 
 % calculate the likelihood
 L = zeros(n.I,1);
 
 for i = 1:n.I
     totalT = n.T(i);
-    tmp = phi;
+    tmp = phi; % initial state probability
     tmpD = cell2mat(D(i));
 
     for t = 1:1:totalT-1
         a = AggObserved(t,i);
         mQ = zeros(n.S,n.S);
-        for k = a:n.X:n.S
+        for k = a:n.SNum:n.S
             mQ(k,:) = CCP(k,tmpD(t)+1)*Q(k,:);
         end
         tmp = tmp*mQ;
@@ -103,7 +102,7 @@ for i = 1:n.I
     
     tmpSum = 0;
 
-    for k = a:n.X:n.S
+    for k = a:n.SNum:n.S
         tmpSum = tmpSum + tmp(k)*CCP(k,tmpD(totalT)+1);
     end
     L(i) = log(tmpSum);

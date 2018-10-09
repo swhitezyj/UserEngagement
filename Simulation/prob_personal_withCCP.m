@@ -27,27 +27,21 @@ estQE_promotion = estQE_price;
 n.SNum = 96;
 load('CCP.mat');
 
-%% process individual user's traces
-%phi = x;
-
 revenue = 0;
-phi = zeros(1,n.E)+1/n.E;
 
 for i = 1:1:n.I
     totalT = n.T(i);
 	treatedT = treatmentT(i)
 	period = totalT - treatedT
-    QE = phi;
+    QE = phi;  % initial state probability
     
     quota = 0;
     
     for t = treatedT:1:totalT-1
         a = AggObserved(t,i);
         idxe = 0;
-        ne = 0;
         
         for k = a:n.SNum:n.S
-            ne = ne + 1;
             idxe = idxe + 1;
             % dynamic engagement-based promotion
             if idxe > 2
